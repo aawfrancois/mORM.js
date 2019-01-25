@@ -4,7 +4,6 @@ import Student from "./entities/student";
 const orm = new mOrm();
 
 (async () => {
-  let connection;
 
   try {
     await orm.createConnection({
@@ -18,16 +17,16 @@ const orm = new mOrm();
       entities: [Student]
     });
   } catch (err) {
-    console.log(`Error Message ${err.message}`);
+    console.log(`Error:  ${err.message}`);
     process.exit(-1);
   }
 
-  let Student = {
+  let student = {
     firstname: "Julien",
     lastname: "Luccioni"
   };
 
-  const StudentEntity = orm.getEntity("Student");
-  console.log(StudentEntity);
-  const savedStudent = await StudentEntity.save(Student);
+  const studentEntity = orm.getEntity("Student");
+  console.log(studentEntity);
+  const savedStudent = await studentEntity.save(student);
 })();

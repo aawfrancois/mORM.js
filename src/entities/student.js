@@ -1,4 +1,6 @@
-export default class Student {
+import Entity from "./entity"
+export default class Student extends Entity {
+    
     static meta() {
       return {
         name: 'Student',
@@ -11,7 +13,7 @@ export default class Student {
           firstname: {
             type: 'string'
           },
-          fullname: {
+          lastname: {
             type: 'string'
           }
         }

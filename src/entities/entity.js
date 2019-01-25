@@ -1,11 +1,19 @@
-import Student from "./entity/student";
-import Project from "./entity/project";
-import Note from "./entity/note";
-
 export default class Entity {
-  constructor(dbInstance, name) {}
+  constructor(dbInstance, name) {
+    this.dbInstance = dbInstance;
+    this.name = name;
+  }
 
-  async save(data) {}
+  async save(data) {
+    const text = `INSERT INTO ${this.name}(firstname, lastname) VALUES($1, $2) RETURNING *`;
+    try {
+      const values = ["julien", "luccioni"];
+      const res = await this.dbInstance.client.query(text, values);
+      console.log(res.rows[0]);
+    } catch (err) {
+      console.log(err.stack);
+    }
+  }
   async count() {}
   async findByPk(id, { attributes }) {}
   async findAll({ attributes }) {}

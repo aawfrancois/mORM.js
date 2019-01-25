@@ -1,20 +1,21 @@
-import { client } from "pg";
+import { Client } from "pg";
 import Core from "./core";
 
 export default class PostgreSQL extends Core {
   constructor(options) {
     super(options);
+    this.initialize()
   }
 
   async initialize() {
-    const { host, port, username, password, database } = this;
+    const { host, port, username:user, password, database, synchronize, entities } = this;
 
     this.client = new Client({
-      user: username,
+      user,
       host,
       database,
       password,
-      port
+      port,
     });
 
     try {

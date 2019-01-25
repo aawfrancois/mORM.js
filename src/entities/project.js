@@ -1,4 +1,5 @@
-export default class Project {
+import Entity from "./entity"
+export default class Project extends Entity {
     static meta() {
       return {
         name: 'Project',
