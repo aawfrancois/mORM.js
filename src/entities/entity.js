@@ -1,13 +1,15 @@
-import Student from './entity/student'
-import Project from './entity/project'
-import Note from './entity/note'
+import Student from "./entity/student";
+import Project from "./entity/project";
+import Note from "./entity/note";
 
-await orm.createConnection({
-//   ...
-//   synchronize: true,
-//   entities: [
-//     Student,
-//     Project,
-//     Note
-//     ]
-})
+export default class Entity {
+  constructor(dbInstance, name) {}
+
+  async save(data) {}
+  async count() {}
+  async findByPk(id, { attributes }) {}
+  async findAll({ attributes }) {}
+  async findOne({ where, attributes }) {}
+  async update(data) {}
+  async remove(data) {}
+}
