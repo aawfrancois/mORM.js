@@ -28,10 +28,10 @@ const orm = new mOrm();
   };
 
   const studentEntity = orm.getEntity("Student");
-  // let result = await studentEntity.findByPk(1, {
-  //   attributes: ["lastname"]
-  // });
-  // console.log(result);
-  let result = await studentEntity.findOne();
+  let result = await studentEntity.findByPk(1, {
+    attributes: ["lastname"]
+  });
+  console.log(result.toJson());
+  result = await studentEntity.findOne();
   console.log(result);
 })();

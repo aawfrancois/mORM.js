@@ -1,8 +1,18 @@
 import Entity from "./entity";
 export default class Student extends Entity {
   constructor(dbInstance, name, attributs) {
-    super(dbInstance, name);
-    super.setObject(attributs);
+    super(dbInstance, name, attributs);
+  }
+
+  async findByPk(id, { attributes = ["*"] } = {}) {
+    const data = await super.findByPk(id, { attributes });
+    console.log(data)
+    return new Student(this.dbInstance, this.name, data);
+  }
+
+  toJson() {
+    const id = this.id;
+    return { id };
   }
 
   static meta() {

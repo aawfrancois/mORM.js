@@ -1,12 +1,10 @@
 export default class Entity {
-  constructor(dbInstance, name) {
+  constructor(dbInstance, name, attributs = {}) {
     this.dbInstance = dbInstance;
     this.name = name;
-  }
-
-  setObject(attribus = {}) {
-    for (const key in attribus) {
-      this[key] = element;
+    for (const key in attributs) {
+      this[key] = attributs[key];
+      console.log(`${this[key]} + ${attributs[key]}`);
     }
   }
 
@@ -37,6 +35,7 @@ export default class Entity {
       console.log(err.stack);
     }
   }
+
   async findByPk(id, { attributes = ["*"] } = {}) {
     const query = `SELECT ${attributes.join(",")} FROM ${
       this.name
@@ -48,6 +47,7 @@ export default class Entity {
       console.log(err.stack);
     }
   }
+
   async findAll({ attributes = ["*"] } = {}) {
     const query = `SELECT ${attributes.join(",")} FROM ${this.name}`;
     try {
@@ -57,6 +57,7 @@ export default class Entity {
       console.log(err.stack);
     }
   }
+
   async findOne({ where = {}, attributes = ["*"] } = {}) {
     const conditions = [];
     for (const key in where) {
@@ -68,7 +69,7 @@ export default class Entity {
     console.log(query);
     try {
       const res = await this.dbInstance.client.query(query);
-      return res.rows;
+      return res.rows[0];
     } catch (err) {
       console.log(err.stack);
     }
