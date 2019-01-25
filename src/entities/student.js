@@ -1,7 +1,8 @@
 import Entity from "./entity";
 export default class Student extends Entity {
-  constructor(dbInstance, name) {
+  constructor(dbInstance, name, attributs) {
     super(dbInstance, name);
+    super.setObject(attributs);
   }
 
   static meta() {
