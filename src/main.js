@@ -21,12 +21,11 @@ const orm = new mOrm();
     process.exit(-1);
   }
 
-  let student = {
-    firstname: "Julien",
-    lastname: "Luccioni"
-  };
+  // let student = {
+  //   firstname: "Julien",
+  //   lastname: "Luccioni"
+  // };
 
-  const studentEntity = orm.getEntity("Student");
-  console.log(studentEntity);
-  const savedStudent = await studentEntity.save(student);
+  // const studentEntity = orm.getEntity("Student");
+  // const savedStudent = await studentEntity.save(student);
 })();

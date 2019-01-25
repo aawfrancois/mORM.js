@@ -53,6 +53,7 @@ export default class mOrm {
         });
         break;
     }
+    await this.dbInstance.initialize();
   }
 
   getEntity(name) {

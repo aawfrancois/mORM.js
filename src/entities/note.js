@@ -5,10 +5,15 @@ export default class Note extends Entity {
       return {
         name: 'Project',
         columns: {
-          id: {
+          id_student: {
             primary: true,
+            foreignKey:true,
             type: 'int',
-            generated: true
+          },
+          id_note: {
+            primary: true,
+            foreignKey:true,
+            type: 'int',
           },
           name: {
             type: 'string'

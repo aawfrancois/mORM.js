@@ -4,7 +4,6 @@ import Core from "./core";
 export default class PostgreSQL extends Core {
   constructor(options) {
     super(options);
-    this.initialize()
   }
 
   async initialize() {
