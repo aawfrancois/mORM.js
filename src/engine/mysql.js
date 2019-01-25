@@ -11,7 +11,7 @@ export default class MySQL extends Core {
 
         const {host, username: user, password, database} = this;
 
-        var connection = mysql.createConnection({
+        let connection = mysql.createConnection({
             host,
             user,
             password,

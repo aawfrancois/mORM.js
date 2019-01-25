@@ -56,7 +56,6 @@ export default class mOrm {
         });
         break;
       case "mysql":
-        console.log('mysql')
         this.dbInstance = new MySql({
           host,
           username,
