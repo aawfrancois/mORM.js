@@ -1,5 +1,9 @@
 import Entity from "./entity"
 export default class Project extends Entity {
+  constructor(dbInstance, name) {
+    super(dbInstance, name);
+  }
+  
     static meta() {
       return {
         name: 'Project',

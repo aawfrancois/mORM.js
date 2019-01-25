@@ -3,11 +3,14 @@ import { existsSync } from "fs";
 import PostgreSQL from "./engine/PostgreSQL";
 import Student from "./entities/student";
 import Project from "./entities/project";
+import Note from "./entities/note";
 export default class mOrm {
   configPathName = "./mOrm.config.js";
 
   classes = {
-    Student
+    Student,
+    Project,
+    Note
   };
 
   async createConnection(dbConfig = {}) {
@@ -24,7 +27,7 @@ export default class mOrm {
       } else {
         this.config = Object.assign(dbConfig, {
           synchronize: true,
-          entities: [Student, Project]
+          entities: [Student, Project, Note]
         });
       }
     }
@@ -57,6 +60,6 @@ export default class mOrm {
   }
 
   getEntity(name) {
-    return new this.classes[name](this.dbInstance,name);
+    return new this.classes[name](this.dbInstance, name);
   }
 }

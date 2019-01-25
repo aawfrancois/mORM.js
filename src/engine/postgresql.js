@@ -7,18 +7,31 @@ export default class PostgreSQL extends Core {
   }
 
   async initialize() {
-    const { host, port, username:user, password, database, synchronize, entities } = this;
+    const {
+      host,
+      port,
+      username: user,
+      password,
+      database,
+      synchronize,
+      entities
+    } = this;
 
     this.client = new Client({
       user,
       host,
       database,
       password,
-      port,
+      port
     });
 
     try {
       await this.client.connect();
+      if (synchronize) {
+        for (const key in object) {
+          await this.client.query(`DELETE FROM ${key}`);
+        }
+      }
     } catch (ex) {
       throw new Error(`Databse ${host} doesn't exist`);
     }

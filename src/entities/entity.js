@@ -4,28 +4,73 @@ export default class Entity {
     this.name = name;
   }
 
+  setOne(){
+
+  }
+
   async save(data) {
-    const text = `INSERT INTO ${this.name}(firstname, lastname) VALUES($1, $2) RETURNING *`;
+    const keys = [];
+    const values = [];
+    for (const key in data) {
+      keys.push(key);
+      values.push(`'${data[key]}'`);
+    }
+    const query = `INSERT INTO ${this.name} (${keys.join(
+      ","
+    )}) VALUES(${values.join(",")}) RETURNING *`;
     try {
-      const values = ["julien", "luccioni"];
-      const res = await this.dbInstance.client.query(text, values);
-      console.log(res.rows[0]);
+      const res = await this.dbInstance.client.query(query);
+      return res.rows[0];
     } catch (err) {
       console.log(err.stack);
     }
   }
+
   async count() {
-    const text = `SELECT COUNT(*) FROM ${this.name}`;
+    const query = `SELECT COUNT(*) FROM ${this.name}`;
     try {
-      const res = await this.dbInstance.client.query(text);
-      console.log(res.rows);
+      const res = await this.dbInstance.client.query(query);
+      return res.rows;
     } catch (err) {
       console.log(err.stack);
     }
   }
-  async findByPk(id, { attributes }) {}
-  async findAll({ attributes }) {}
-  async findOne({ where, attributes }) {}
+  async findByPk(id, { attributes = ["*"] } = {}) {
+    const query = `SELECT ${attributes.join(",")} FROM ${
+      this.name
+    } WHERE id = ${id}`;
+    try {
+      const res = await this.dbInstance.client.query(query);
+      return res.rows[0];
+    } catch (err) {
+      console.log(err.stack);
+    }
+  }
+  async findAll({ attributes = ["*"] } = {}) {
+    const query = `SELECT ${attributes.join(",")} FROM ${this.name}`;
+    try {
+      const res = await this.dbInstance.client.query(query);
+      return res.rows;
+    } catch (err) {
+      console.log(err.stack);
+    }
+  }
+  async findOne({ where = { }, attributes = ["*"] } = {}) {
+    const conditions = [];
+    for (const key in where) {
+      conditions.push(`${key} = '${where[key]}'`);
+    }
+    const query = `SELECT ${attributes.join(",")} FROM ${
+      this.name
+    } ${conditions.length == 0 ? "" : "WHERE"} ${conditions.join("AND")} LIMIT 1`;
+    console.log(query)
+    try {
+      const res = await this.dbInstance.client.query(query);
+      return res.rows;
+    } catch (err) {
+      console.log(err.stack);
+    }
+  }
   async update(data) {}
   async remove(data) {}
 }
