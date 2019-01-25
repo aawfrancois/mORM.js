@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash'
 import { existsSync } from 'fs'
 
 export default class mOrm {
-  configPathName = "./mrom.config.js";
+  configPathName = "./mOrm.config.js";
 
   async createConnection(dbConfig = {}) {
     if (typeof dbConfig == 'string') {
