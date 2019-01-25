@@ -4,8 +4,10 @@ export default class Entity {
     this.name = name;
   }
 
-  setOne(){
-
+  setObject(attribus = {}) {
+    for (const key in attribus) {
+      this[key] = element;
+    }
   }
 
   async save(data) {
@@ -55,15 +57,15 @@ export default class Entity {
       console.log(err.stack);
     }
   }
-  async findOne({ where = { }, attributes = ["*"] } = {}) {
+  async findOne({ where = {}, attributes = ["*"] } = {}) {
     const conditions = [];
     for (const key in where) {
       conditions.push(`${key} = '${where[key]}'`);
     }
-    const query = `SELECT ${attributes.join(",")} FROM ${
-      this.name
-    } ${conditions.length == 0 ? "" : "WHERE"} ${conditions.join("AND")} LIMIT 1`;
-    console.log(query)
+    const query = `SELECT ${attributes.join(",")} FROM ${this.name} ${
+      conditions.length == 0 ? "" : "WHERE"
+    } ${conditions.join("AND")} LIMIT 1`;
+    console.log(query);
     try {
       const res = await this.dbInstance.client.query(query);
       return res.rows;
