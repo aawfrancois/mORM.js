@@ -52,6 +52,18 @@ export default class mOrm {
           entities
         });
         break;
+      case "mysql":
+        console.log('mysql')
+        this.dbInstance = new MySql({
+          host,
+          username,
+          pass,
+          database
+        });
+        break;
+      case "sqlite":
+        this.dbInstance = new SQLite();
+        break;
     }
     await this.dbInstance.initialize();
   }
