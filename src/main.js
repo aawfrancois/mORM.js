@@ -26,6 +26,6 @@ const orm = new mOrm();
   //   lastname: "Luccioni"
   // };
 
-  // const studentEntity = orm.getEntity("Student");
-  // const savedStudent = await studentEntity.save(student);
+  const studentEntity = orm.getEntity("Student");
+  const savedStudent = await studentEntity.count();
 })();

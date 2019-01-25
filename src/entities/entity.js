@@ -14,7 +14,15 @@ export default class Entity {
       console.log(err.stack);
     }
   }
-  async count() {}
+  async count() {
+    const text = `SELECT COUNT(*) FROM ${this.name}`;
+    try {
+      const res = await this.dbInstance.client.query(text);
+      console.log(res.rows);
+    } catch (err) {
+      console.log(err.stack);
+    }
+  }
   async findByPk(id, { attributes }) {}
   async findAll({ attributes }) {}
   async findOne({ where, attributes }) {}
