@@ -18,7 +18,7 @@ const orm = new mOrm();
       entities: [Student]
     });
   } catch (err) {
-    throw new Error(`Error Message ${err.message}`);
+    console.log(`Error Message ${err.message}`);
     process.exit(-1);
   }
 
