@@ -1,7 +1,6 @@
 import Core from "./core"
 import mysql from 'mysql'
 
-
 export default class MySQL extends Core {
     constructor(options) {
         super(options);

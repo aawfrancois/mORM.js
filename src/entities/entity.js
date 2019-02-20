@@ -1,14 +1,30 @@
 export default class Entity {
-  constructor(dbInstance, name, attributs = {}) {
+  constructor(dbInstance, attributs = {}) {
     this.dbInstance = dbInstance;
-    this.name = name;
     for (const key in attributs) {
       this[key] = attributs[key];
-      console.log(`${this[key]} + ${attributs[key]}`);
     }
   }
 
-  async save(data) {
+  static async exec(query) {
+    try {
+      const res = await this.dbInstance.client.query(query);
+      return res.rows;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async exec(query) {
+    try {
+      const res = await this.dbInstance.client.query(query);
+      return res.rows;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async save(data) {
     const keys = [];
     const values = [];
     for (const key in data) {
@@ -18,47 +34,35 @@ export default class Entity {
     const query = `INSERT INTO ${this.name} (${keys.join(
       ","
     )}) VALUES(${values.join(",")}) RETURNING *`;
-    try {
-      const res = await this.dbInstance.client.query(query);
-      return res.rows[0];
-    } catch (err) {
-      console.log(err.stack);
-    }
+    return new this(this.dbInstance, (await this.exec(query))[0]);
   }
 
-  async count() {
+  static async count() {
     const query = `SELECT COUNT(*) FROM ${this.name}`;
-    try {
-      const res = await this.dbInstance.client.query(query);
-      return res.rows;
-    } catch (err) {
-      console.log(err.stack);
-    }
+    return await this.exec(query);
   }
 
-  async findByPk(id, { attributes = ["*"] } = {}) {
+  static async findByPk(id, { attributes = ["*"] } = {}) {
     const query = `SELECT ${attributes.join(",")} FROM ${
       this.name
     } WHERE id = ${id}`;
-    try {
-      const res = await this.dbInstance.client.query(query);
+    const res = await this.dbInstance.client.query(query);
+    if (attributes[0] != "*") {
       return res.rows[0];
-    } catch (err) {
-      console.log(err.stack);
     }
+    return new this(this.dbInstance, res.rows[0]);
   }
 
-  async findAll({ attributes = ["*"] } = {}) {
+  static async findAll({ attributes = ["*"] } = {}) {
     const query = `SELECT ${attributes.join(",")} FROM ${this.name}`;
-    try {
-      const res = await this.dbInstance.client.query(query);
+    const res = await this.exec(query);
+    if (attributes[0] != "*") {
       return res.rows;
-    } catch (err) {
-      console.log(err.stack);
     }
+    return res.map(data => new this(this.dbInstance, data));
   }
 
-  async findOne({ where = {}, attributes = ["*"] } = {}) {
+  static async findOne({ where = {}, attributes = ["*"] } = {}) {
     const conditions = [];
     for (const key in where) {
       conditions.push(`${key} = '${where[key]}'`);
@@ -66,14 +70,54 @@ export default class Entity {
     const query = `SELECT ${attributes.join(",")} FROM ${this.name} ${
       conditions.length == 0 ? "" : "WHERE"
     } ${conditions.join("AND")} LIMIT 1`;
-    console.log(query);
-    try {
-      const res = await this.dbInstance.client.query(query);
-      return res.rows[0];
-    } catch (err) {
-      console.log(err.stack);
+    const res = (await this.exec(query))[0];
+    if (attributes[0] != "*") {
+      return res;
     }
+    return new this(this.dbInstance, res);
   }
-  async update(data) {}
-  async remove(data) {}
+
+  async update() {
+    const pk = this.getPrimaryKey();
+    const values = [];
+    const meta = this.constructor.meta().columns;
+    for (const key in meta) {
+      if (meta[key].primary) {
+        values.push(`${key} = '${this[key]}'`);
+      }
+    }
+    const query = `UPDATE ${this.constructor.name}
+    SET ${values.join(",")}
+    WHERE ${pk.join(" AND ")}
+    RETURNING *`;
+    return await this.exec(query);
+  }
+  
+  async remove() {
+    const values = this.getPrimaryKey();
+    const query = `DELETE FROM ${this.constructor.name}
+      WHERE ${values.join(" AND ")}`;
+    await this.exec(query);
+    return;
+  }
+
+  getPrimaryKey() {
+    const values = [];
+    const meta = this.constructor.meta().columns;
+    for (const key in meta) {
+      if (meta[key].primary) {
+        values.push(`${key} = '${this[key]}'`);
+      }
+    }
+    return values;
+  }
+
+  toJson() {
+    const obj = {};
+    const meta = this.constructor.meta().columns;
+    for (const key in meta) {
+      obj[key] = this[key];
+    }
+    return JSON.stringify(obj);
+  }
 }

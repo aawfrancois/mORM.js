@@ -27,12 +27,16 @@ export default class PostgreSQL extends Core {
 
     try {
       await this.client.connect();
-      if (synchronize) {
-        for (const key in object) {
-          await this.client.query(`DELETE FROM ${key}`);
+      try {
+        if (synchronize) {
+          for (const key in entities) {
+            console.log("Drop data: " + key);
+            await this.client.query(`DELETE FROM ${key}`);
+          }
         }
-      }
+      } catch (error) {}
     } catch (ex) {
+      console.log(ex.message);
       throw new Error(`Databse ${host} doesn't exist`);
     }
   }

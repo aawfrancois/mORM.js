@@ -1,19 +1,10 @@
 import Entity from "./entity";
 export default class Student extends Entity {
-  constructor(dbInstance, name, attributs) {
-    super(dbInstance, name, attributs);
+  constructor(dbInstance, attributs) {
+    super(dbInstance, attributs);
   }
 
-  async findByPk(id, { attributes = ["*"] } = {}) {
-    const data = await super.findByPk(id, { attributes });
-    console.log(data)
-    return new Student(this.dbInstance, this.name, data);
-  }
-
-  toJson() {
-    const id = this.id;
-    return { id };
-  }
+  static name = "student";
 
   static meta() {
     return {
